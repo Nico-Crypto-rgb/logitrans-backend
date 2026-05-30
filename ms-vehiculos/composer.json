@@ -1,0 +1,17 @@
+{
+    "name": "logitrans/ms-vehiculos",
+    "description": "Microservicio de vehiculos LogiTrans",
+    "authors": [
+        {
+            "name": "nicolas",
+            "email": "jnjimenez@uniboyaca.edu.co"
+        }
+    ],
+    "require": {
+        "slim/slim": "4.12",
+        "nyholm/psr7": "1.8",
+        "nyholm/psr7-server": "1.1",
+        "illuminate/database": "10.0",
+        "vlucas/phpdotenv": "5.0"
+    }
+}
