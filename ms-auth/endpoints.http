@@ -1,0 +1,36 @@
+### LogiTrans Express — ms-auth (puerto 8001)
+@base = http://localhost:8001
+@token = bcfe6c2b64aaeb92947ba0d48afcac63ea7f81d8ee3290872976590b63bff438
+
+### 1. Login
+POST {{base}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "jnjimenez@logitrans.com",
+  "password": "password"
+}
+
+### 2. Validar token
+GET {{base}}/auth/validate
+Authorization: {{token}}
+
+### 3. Logout
+POST {{base}}/auth/logout
+Authorization: {{token}}
+
+### 4. Listar usuarios
+GET {{base}}/usuarios
+Authorization: {{token}}
+
+### 5. Crear usuario
+POST {{base}}/usuarios
+Authorization: {{token}}
+Content-Type: application/json
+
+{
+  "nombre": "Operador Uno",
+  "email": "operador@logitrans.com",
+  "password": "pass123",
+  "rol": "operador"
+}
