@@ -1,0 +1,63 @@
+### ms-conductores — LogiTrans Express (puerto 8002)
+
+@base = http://localhost:8002
+@token = 15718855e7bfb5f5f7c9b6c27e833ba1adbe17ff34125ae64225e61676aea91a
+
+### 0. Health check
+GET {{base}}/
+
+###
+
+### 1. Listar todos los conductores
+GET {{base}}/conductores
+Authorization: Bearer {{token}}
+
+###
+
+### 2. Obtener conductor por ID
+GET {{base}}/conductores/1
+Authorization: Bearer {{token}}
+
+###
+
+### 3. Crear conductor
+POST {{base}}/conductores
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "nombre": "Carlos Ramírez",
+    "cedula": "1234567890",
+    "licencia": "LIC-001",
+    "telefono": "3001234567",
+    "estado": "disponible"
+}
+
+###
+
+### 4. Actualizar conductor
+PUT {{base}}/conductores/1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "nombre": "Carlos A. Ramírez",
+    "telefono": "3009999999"
+}
+
+###
+
+### 5. Cambiar estado
+PATCH {{base}}/conductores/1/estado
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "estado": "en_ruta"
+}
+
+###
+
+### 6. Eliminar conductor
+DELETE {{base}}/conductores/1
+Authorization: Bearer {{token}}
