@@ -1,0 +1,66 @@
+### ms-vehiculos — LogiTrans Express (puerto 8003)
+
+@base = http://localhost:8003
+@token = 8744a5927c466a34cb5f7ea0c74d685d5766b4292d30806ccc1795987297fcd6
+
+### 0. Health check
+GET {{base}}/
+
+###
+
+### 1. Listar vehículos
+GET {{base}}/vehiculos
+Authorization: Bearer {{token}}
+
+###
+
+### 2. Obtener vehículo por ID
+GET {{base}}/vehiculos/1
+Authorization: Bearer {{token}}
+
+###
+
+### 3. Crear vehículo
+POST {{base}}/vehiculos
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "placa": "ABC123",
+    "tipo": "camion",
+    "capacidad_kg": 5000,
+    "marca": "Chevrolet",
+    "modelo": "NPR",
+    "anio": 2020,
+    "estado": "disponible"
+}
+
+###
+
+### 4. Actualizar vehículo
+PUT {{base}}/vehiculos/1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "marca": "Ford",
+    "modelo": "Cargo",
+    "anio": 2021
+}
+
+###
+
+### 5. Cambiar estado
+PATCH {{base}}/vehiculos/1/estado
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "estado": "mantenimiento"
+}
+
+###
+
+### 6. Eliminar vehículo
+DELETE {{base}}/vehiculos/1
+Authorization: Bearer {{token}}
