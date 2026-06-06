@@ -1,0 +1,96 @@
+### ms-rutas — LogiTrans Express (puerto 8004)
+
+@base = http://localhost:8004
+@token = TU_TOKEN_AQUI
+
+### 0. Health check
+GET {{base}}/
+
+###
+
+### ── RUTAS ──────────────────────────────────────
+
+### 1. Listar rutas
+GET {{base}}/rutas
+Authorization: Bearer {{token}}
+
+###
+
+### 2. Obtener ruta por ID
+GET {{base}}/rutas/1
+Authorization: Bearer {{token}}
+
+###
+
+### 3. Crear ruta
+POST {{base}}/rutas
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "nombre": "Bogotá - Medellín",
+    "origen": "Bogotá",
+    "destino": "Medellín",
+    "distancia_km": 415,
+    "tiempo_estimado_horas": 8.5,
+    "activa": 1
+}
+
+###
+
+### 4. Actualizar ruta
+PUT {{base}}/rutas/1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "distancia_km": 420,
+    "tiempo_estimado_horas": 9
+}
+
+###
+
+### 5. Eliminar ruta
+DELETE {{base}}/rutas/1
+Authorization: Bearer {{token}}
+
+###
+
+### ── PROGRAMACIÓN DE VIAJES ──────────────────────
+
+### 6. Listar programaciones
+GET {{base}}/programacion
+Authorization: Bearer {{token}}
+
+###
+
+### 7. Crear programación
+POST {{base}}/programacion
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "ruta_id": 1,
+    "conductor_id": 1,
+    "vehiculo_id": 1,
+    "fecha_salida": "2026-06-10 06:00:00",
+    "fecha_llegada_estimada": "2026-06-10 14:30:00",
+    "estado": "programado"
+}
+
+###
+
+### 8. Actualizar programación
+PUT {{base}}/programacion/1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "estado": "en_curso"
+}
+
+###
+
+### 9. Eliminar programación
+DELETE {{base}}/programacion/1
+Authorization: Bearer {{token}}
