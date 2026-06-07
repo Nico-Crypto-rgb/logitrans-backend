@@ -1,0 +1,87 @@
+@base = http://localhost:8005
+@token = PEGAR_TOKEN_AQUI
+
+### 0. Health check
+GET {{base}}/
+
+###
+
+### ── VIAJES ──────────────────────────────────────────
+
+### 1. Listar viajes
+GET {{base}}/viajes
+Authorization: Bearer {{token}}
+
+###
+
+### 2. Obtener viaje por ID
+GET {{base}}/viajes/1
+Authorization: Bearer {{token}}
+
+###
+
+### 3. Crear viaje
+POST {{base}}/viajes
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "programacion_id": 1,
+    "estado": "en_transito",
+    "ubicacion_actual": "Bogotá - Calle 100",
+    "observaciones": "Viaje iniciado sin novedades",
+    "fecha_inicio": "2025-01-15 08:00:00"
+}
+
+###
+
+### 4. Actualizar estado del viaje
+PUT {{base}}/viajes/1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "estado": "finalizado",
+    "ubicacion_actual": "Medellín - Terminal",
+    "fecha_fin": "2025-01-15 18:30:00"
+}
+
+###
+
+### 5. Eliminar viaje
+DELETE {{base}}/viajes/1
+Authorization: Bearer {{token}}
+
+###
+
+### ── NOVEDADES ────────────────────────────────────────
+
+### 6. Listar novedades de un viaje
+GET {{base}}/viajes/1/novedades
+Authorization: Bearer {{token}}
+
+###
+
+### 7. Crear novedad
+POST {{base}}/novedades
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "viaje_id": 1,
+    "tipo": "retraso",
+    "descripcion": "Trancón en la vía Bogotá-Medellín, retraso estimado 2 horas",
+    "usuario_id": 1
+}
+
+###
+
+### 8. Obtener novedad por ID
+GET {{base}}/novedades/1
+Authorization: Bearer {{token}}
+
+###
+
+### 9. Eliminar novedad
+DELETE {{base}}/novedades/1
+Authorization: Bearer {{token}}
