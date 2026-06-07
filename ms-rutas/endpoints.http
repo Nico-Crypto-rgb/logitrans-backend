@@ -1,7 +1,7 @@
 ### ms-rutas — LogiTrans Express (puerto 8004)
 
 @base = http://localhost:8004
-@token = TU_TOKEN_AQUI
+@token = 0eeaf48553a1e2dd292cddebd87cba1641ae8f2e5997e6c5a9cb049585b8f701
 
 ### 0. Health check
 GET {{base}}/
