@@ -1,5 +1,5 @@
 @base = http://localhost:8005
-@token = PEGAR_TOKEN_AQUI
+@token = 173cfae8e44a3797707f48aa9fa6e19d5fef6be1ca3d48cd2024a6dd344a4441
 
 ### 0. Health check
 GET {{base}}/
