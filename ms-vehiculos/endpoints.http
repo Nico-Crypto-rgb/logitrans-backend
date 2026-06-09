@@ -1,7 +1,7 @@
 ### ms-vehiculos — LogiTrans Express (puerto 8003)
 
 @base = http://localhost:8003
-@token = 8744a5927c466a34cb5f7ea0c74d685d5766b4292d30806ccc1795987297fcd6
+@token = 42646305376fa2c6cf852c13b0095aaa72392410e6135e316ed81d17b5f20ed6
 
 ### 0. Health check
 GET {{base}}/

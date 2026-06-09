@@ -26,6 +26,23 @@ $capsule->bootEloquent();
 $psr17Factory = new Psr17Factory();
 $app = AppFactory::create($psr17Factory);
 
+// Middlewares en orden correcto
+$app->addBodyParsingMiddleware();
+$app->addRoutingMiddleware();
+
+$app->options('/{routes:.+}', function ($request, $response) {
+    return $response
+        ->withHeader('Access-Control-Allow-Origin', '*')
+        ->withHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+        ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
+});
+
+require __DIR__ . '/../src/Rutas/rutas.php';
+
+// Error middleware
+$app->addErrorMiddleware(true, true, true);
+
+// CORS middleware
 $app->add(function ($request, $handler) {
     $response = $handler->handle($request);
     return $response
@@ -33,15 +50,6 @@ $app->add(function ($request, $handler) {
         ->withHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
         ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
 });
-
-$app->addRoutingMiddleware();
-$app->addErrorMiddleware(true, true, true);
-
-$app->options('/{routes:.+}', function ($request, $response) {
-    return $response;
-});
-
-require __DIR__ . '/../src/Rutas/rutas.php';
 
 $creator = new ServerRequestCreator($psr17Factory, $psr17Factory, $psr17Factory, $psr17Factory);
 $request = $creator->fromGlobals();

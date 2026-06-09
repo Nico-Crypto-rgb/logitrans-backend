@@ -1,6 +1,6 @@
 ### LogiTrans Express — ms-auth (puerto 8001)
 @base = http://localhost:8001
-@token = 15718855e7bfb5f5f7c9b6c27e833ba1adbe17ff34125ae64225e61676aea91a
+@token = 42646305376fa2c6cf852c13b0095aaa72392410e6135e316ed81d17b5f20ed6
 
 ### 1. Login
 POST {{base}}/auth/login

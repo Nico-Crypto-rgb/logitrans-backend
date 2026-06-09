@@ -29,7 +29,25 @@ $capsule->bootEloquent();
 $psr17Factory = new Psr17Factory();
 $app = AppFactory::create($psr17Factory);
 
-// CORS
+// Middlewares en orden correcto
+$app->addBodyParsingMiddleware();
+$app->addRoutingMiddleware();
+
+// Preflight OPTIONS
+$app->options('/{routes:.+}', function ($request, $response) {
+    return $response
+        ->withHeader('Access-Control-Allow-Origin', '*')
+        ->withHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+        ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
+});
+
+// Rutas del microservicio
+require __DIR__ . '/../src/Rutas/rutas.php';
+
+// Error middleware
+$app->addErrorMiddleware(true, true, true);
+
+// CORS middleware
 $app->add(function ($request, $handler) {
     $response = $handler->handle($request);
     return $response
@@ -37,17 +55,6 @@ $app->add(function ($request, $handler) {
         ->withHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
         ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
 });
-
-$app->addRoutingMiddleware();
-$app->addErrorMiddleware(true, true, true);
-
-// Preflight OPTIONS
-$app->options('/{routes:.+}', function ($request, $response) {
-    return $response;
-});
-
-// Rutas del microservicio
-require __DIR__ . '/../src/Rutas/rutas.php';
 
 // Ejecutar
 $creator = new ServerRequestCreator($psr17Factory, $psr17Factory, $psr17Factory, $psr17Factory);

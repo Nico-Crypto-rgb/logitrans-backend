@@ -27,10 +27,26 @@ $capsule->bootEloquent();
 
 // Crear app Slim
 $app = AppFactory::create();
+
+// Middlewares en orden correcto
 $app->addBodyParsingMiddleware();
 $app->addRoutingMiddleware();
 
-// CORS
+// Pre-flight OPTIONS
+$app->options('/{routes:.+}', function ($request, $response) {
+    return $response
+        ->withHeader('Access-Control-Allow-Origin', '*')
+        ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
+        ->withHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+});
+
+// Cargar rutas
+require __DIR__ . '/../src/Rutas/rutas.php';
+
+// Error middleware
+$app->addErrorMiddleware(true, true, true);
+
+// CORS middleware
 $app->add(function ($request, $handler) {
     $response = $handler->handle($request);
     return $response
@@ -38,15 +54,5 @@ $app->add(function ($request, $handler) {
         ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
         ->withHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 });
-
-// Pre-flight OPTIONS
-$app->options('/{routes:.+}', function ($request, $response) {
-    return $response;
-});
-
-$app->addErrorMiddleware(true, true, true);
-
-// Cargar rutas
-require __DIR__ . '/../src/Rutas/rutas.php';
 
 $app->run();

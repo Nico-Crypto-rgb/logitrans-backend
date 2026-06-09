@@ -1,7 +1,7 @@
 ### ms-conductores — LogiTrans Express (puerto 8002)
 
 @base = http://localhost:8002
-@token = 15718855e7bfb5f5f7c9b6c27e833ba1adbe17ff34125ae64225e61676aea91a
+@token = 42646305376fa2c6cf852c13b0095aaa72392410e6135e316ed81d17b5f20ed6
 
 ### 0. Health check
 GET {{base}}/
@@ -26,10 +26,10 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-    "nombre": "Carlos Ramírez",
-    "cedula": "1234567890",
+    "nombre": "Nicolas Tamayo",
+    "cedula": "1011084879",
     "licencia": "LIC-001",
-    "telefono": "3001234567",
+    "telefono": "3213250592",
     "estado": "disponible"
 }
 

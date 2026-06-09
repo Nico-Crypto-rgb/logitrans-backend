@@ -1,5 +1,5 @@
 @base = http://localhost:8005
-@token = 173cfae8e44a3797707f48aa9fa6e19d5fef6be1ca3d48cd2024a6dd344a4441
+@token = 42646305376fa2c6cf852c13b0095aaa72392410e6135e316ed81d17b5f20ed6
 
 ### 0. Health check
 GET {{base}}/
@@ -49,7 +49,7 @@ Content-Type: application/json
 ###
 
 ### 5. Eliminar viaje
-DELETE {{base}}/viajes/1
+DELETE {{base}}/viajes/8
 Authorization: Bearer {{token}}
 
 ###
