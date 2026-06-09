@@ -28,7 +28,9 @@ class ProgramacionController
 
     public function store(Request $request, Response $response): Response
     {
-        $body = json_decode($request->getBody()->getContents(), true);
+        // Cambiado a getParsedBody()
+        $body = $request->getParsedBody();
+        $body = is_array($body) ? $body : (array)$body;
 
         if (empty($body['ruta_id']) || empty($body['conductor_id']) || empty($body['vehiculo_id']) || empty($body['fecha_salida'])) {
             $response->getBody()->write(json_encode(['success' => false, 'message' => 'ruta_id, conductor_id, vehiculo_id y fecha_salida son requeridos']));
@@ -56,14 +58,17 @@ class ProgramacionController
             return $response->withStatus(404)->withHeader('Content-Type', 'application/json');
         }
 
-        $body = json_decode($request->getBody()->getContents(), true);
+        // Cambiado a getParsedBody()
+        $body = $request->getParsedBody();
+        $body = is_array($body) ? $body : (array)$body;
+
         $prog->update([
-            'ruta_id'                => $body['ruta_id']                ?? $prog->ruta_id,
-            'conductor_id'           => $body['conductor_id']           ?? $prog->conductor_id,
-            'vehiculo_id'            => $body['vehiculo_id']            ?? $prog->vehiculo_id,
-            'fecha_salida'           => $body['fecha_salida']           ?? $prog->fecha_salida,
-            'fecha_llegada_estimada' => $body['fecha_llegada_estimada'] ?? $prog->fecha_llegada_estimada,
-            'estado'                 => $body['estado']                 ?? $prog->estado,
+            'ruta_id'               => $body['ruta_id']               ?? $prog->ruta_id,
+            'conductor_id'          => $body['conductor_id']          ?? $prog->conductor_id,
+            'vehiculo_id'           => $body['vehiculo_id']           ?? $prog->vehiculo_id,
+            'fecha_salida'          => $body['fecha_salida']          ?? $prog->fecha_salida,
+            'fecha_llegada_estimada'=> $body['fecha_llegada_estimada'] ?? $prog->fecha_llegada_estimada,
+            'estado'                => $body['estado']                ?? $prog->estado,
         ]);
 
         $response->getBody()->write(json_encode(['success' => true, 'message' => 'Programación actualizada', 'data' => $prog->fresh()]));

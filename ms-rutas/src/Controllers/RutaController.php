@@ -28,7 +28,9 @@ class RutaController
 
     public function store(Request $request, Response $response): Response
     {
-        $body = json_decode($request->getBody()->getContents(), true);
+        // Cambiado a getParsedBody()
+        $body = $request->getParsedBody();
+        $body = is_array($body) ? $body : (array)$body;
 
         if (empty($body['nombre']) || empty($body['origen']) || empty($body['destino'])) {
             $response->getBody()->write(json_encode(['success' => false, 'message' => 'nombre, origen y destino son requeridos']));
@@ -56,7 +58,10 @@ class RutaController
             return $response->withStatus(404)->withHeader('Content-Type', 'application/json');
         }
 
-        $body = json_decode($request->getBody()->getContents(), true);
+        // Cambiado a getParsedBody()
+        $body = $request->getParsedBody();
+        $body = is_array($body) ? $body : (array)$body;
+
         $ruta->update([
             'nombre'                => $body['nombre']                ?? $ruta->nombre,
             'origen'                => $body['origen']                ?? $ruta->origen,
