@@ -1,9 +1,9 @@
 ### ms-vehiculos — LogiTrans Express (puerto 8003)
 
 @base = http://localhost:8003
-@token = 42646305376fa2c6cf852c13b0095aaa72392410e6135e316ed81d17b5f20ed6
+@token = 7e9c92f1456aa329b7fe03827c0c2b14a9f6b1b77155045b5469fd8aedd3f0c8
 
-### 0. Health check
+### 0. Health Check
 GET {{base}}/
 
 ###
@@ -15,7 +15,7 @@ Authorization: Bearer {{token}}
 ###
 
 ### 2. Obtener vehículo por ID
-GET {{base}}/vehiculos/2
+GET {{base}}/vehiculos/1
 Authorization: Bearer {{token}}
 
 ###
@@ -26,32 +26,31 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-    "placa": "ABC133",
-    "tipo": "Moto",
-    "capacidad_kg": 500,
-    "marca": "Yamaha",
-    "modelo": "NKZ",
-    "anio": 2022,
+    "placa": "DEF456",
+    "tipo_vehiculo": "Camion",
+    "capacidad_carga": 4500,
+    "modelo": "2024",
+    "marca": "Chevrolet",
     "estado": "disponible"
 }
 
 ###
 
 ### 4. Actualizar vehículo
-PUT {{base}}/vehiculos/2
+PUT {{base}}/vehiculos/1
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
     "marca": "Ford",
-    "modelo": "Cargo",
-    "anio": 2021
+    "modelo": "2025",
+    "capacidad_carga": 5000
 }
 
 ###
 
-### 5. Cambiar estado
-PATCH {{base}}/vehiculos/2/estado
+### 5. Cambiar estado del vehículo
+PATCH {{base}}/vehiculos/1/estado
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
