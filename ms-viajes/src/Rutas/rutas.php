@@ -1,7 +1,6 @@
 <?php
 
-use App\Controllers\ViajeController;
-use App\Controllers\NovedadController;
+use App\Controllers\SeguimientoViajeController;
 use App\Middleware\AuthMiddleware;
 
 // Health check
@@ -13,15 +12,17 @@ $app->get('/', function ($request, $response) {
     return $response->withHeader('Content-Type', 'application/json');
 });
 
-// ── VIAJES ────────────────────────────────────────────
-$app->get('/viajes',        [ViajeController::class, 'index'])  ->add(new AuthMiddleware());
-$app->get('/viajes/{id}',   [ViajeController::class, 'show'])   ->add(new AuthMiddleware());
-$app->post('/viajes',       [ViajeController::class, 'store'])  ->add(new AuthMiddleware());
-$app->put('/viajes/{id}',   [ViajeController::class, 'update']) ->add(new AuthMiddleware());
-$app->delete('/viajes/{id}',[ViajeController::class, 'destroy'])->add(new AuthMiddleware());
+// ── SEGUIMIENTOS DE VIAJE ────────────────────────────
 
-// ── NOVEDADES ─────────────────────────────────────────
-$app->get('/viajes/{viaje_id}/novedades', [NovedadController::class, 'index']) ->add(new AuthMiddleware());
-$app->post('/novedades',                  [NovedadController::class, 'store']) ->add(new AuthMiddleware());
-$app->get('/novedades/{id}',              [NovedadController::class, 'show'])  ->add(new AuthMiddleware());
-$app->delete('/novedades/{id}',           [NovedadController::class, 'destroy'])->add(new AuthMiddleware());
+// Listar todos los seguimientos
+$app->get('/seguimientos', [SeguimientoViajeController::class, 'index'])->add(new AuthMiddleware());
+
+// Crear un nuevo registro de seguimiento (estado o novedad)
+$app->post('/seguimientos', [SeguimientoViajeController::class, 'store'])->add(new AuthMiddleware());
+
+// Obtener un seguimiento específico por ID
+$app->get('/seguimientos/{id}', [SeguimientoViajeController::class, 'show'])->add(new AuthMiddleware());
+
+// Opcional: Si necesitas buscar todo el historial de un viaje específico
+// (Este reemplaza la lógica de /viajes/{viaje_id}/novedades)
+$app->get('/seguimientos/programacion/{programacion_viaje_id}', [SeguimientoViajeController::class, 'getByProgramacion'])->add(new AuthMiddleware());

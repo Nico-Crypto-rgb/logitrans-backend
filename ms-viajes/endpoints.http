@@ -1,87 +1,40 @@
 @base = http://localhost:8005
-@token = 42646305376fa2c6cf852c13b0095aaa72392410e6135e316ed81d17b5f20ed6
+@token = 7e9c92f1456aa329b7fe03827c0c2b14a9f6b1b77155045b5469fd8aedd3f0c8
 
 ### 0. Health check
 GET {{base}}/
 
 ###
 
-### ── VIAJES ──────────────────────────────────────────
+### ── SEGUIMIENTOS DE VIAJE ──────────────────────────
 
-### 1. Listar viajes
-GET {{base}}/viajes
+### 1. Listar todos los seguimientos
+GET {{base}}/seguimientos
 Authorization: Bearer {{token}}
 
 ###
 
-### 2. Obtener viaje por ID
-GET {{base}}/viajes/1
+### 2. Obtener seguimiento por ID
+GET {{base}}/seguimientos/1
 Authorization: Bearer {{token}}
 
 ###
 
-### 3. Crear viaje
-POST {{base}}/viajes
+### 3. Crear nuevo registro (Estado o Novedad)
+# Este endpoint reemplaza tanto la creación de viajes como de novedades
+POST {{base}}/seguimientos
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-    "programacion_id": 1,
+    "programacion_viaje_id": 1,
     "estado": "en_transito",
-    "ubicacion_actual": "Bogotá - Calle 100",
-    "observaciones": "Viaje iniciado sin novedades",
-    "fecha_inicio": "2025-01-15 08:00:00"
+    "novedad": "Vehículo inicia recorrido hacia Medellín"
 }
 
 ###
 
-### 4. Actualizar estado del viaje
-PUT {{base}}/viajes/1
-Authorization: Bearer {{token}}
-Content-Type: application/json
-
-{
-    "estado": "finalizado",
-    "ubicacion_actual": "Medellín - Terminal",
-    "fecha_fin": "2025-01-15 18:30:00"
-}
-
-###
-
-### 5. Eliminar viaje
-DELETE {{base}}/viajes/8
-Authorization: Bearer {{token}}
-
-###
-
-### ── NOVEDADES ────────────────────────────────────────
-
-### 6. Listar novedades de un viaje
-GET {{base}}/viajes/1/novedades
-Authorization: Bearer {{token}}
-
-###
-
-### 7. Crear novedad
-POST {{base}}/novedades
-Authorization: Bearer {{token}}
-Content-Type: application/json
-
-{
-    "viaje_id": 1,
-    "tipo": "retraso",
-    "descripcion": "Trancón en la vía Bogotá-Medellín, retraso estimado 2 horas",
-    "usuario_id": 1
-}
-
-###
-
-### 8. Obtener novedad por ID
-GET {{base}}/novedades/1
-Authorization: Bearer {{token}}
-
-###
-
-### 9. Eliminar novedad
-DELETE {{base}}/novedades/1
+### 4. Consultar historial de un viaje específico
+# Reemplaza la antigua consulta GET /viajes/{id}/novedades
+GET {{base}}/seguimientos/programacion/1
 Authorization: Bearer {{token}}
