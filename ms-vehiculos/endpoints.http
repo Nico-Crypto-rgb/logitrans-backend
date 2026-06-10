@@ -15,7 +15,7 @@ Authorization: Bearer {{token}}
 ###
 
 ### 2. Obtener vehículo por ID
-GET {{base}}/vehiculos/1
+GET {{base}}/vehiculos/2
 Authorization: Bearer {{token}}
 
 ###
@@ -26,19 +26,19 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-    "placa": "ABC123",
-    "tipo": "camion",
-    "capacidad_kg": 5000,
-    "marca": "Chevrolet",
-    "modelo": "NPR",
-    "anio": 2020,
+    "placa": "ABC133",
+    "tipo": "Moto",
+    "capacidad_kg": 500,
+    "marca": "Yamaha",
+    "modelo": "NKZ",
+    "anio": 2022,
     "estado": "disponible"
 }
 
 ###
 
 ### 4. Actualizar vehículo
-PUT {{base}}/vehiculos/1
+PUT {{base}}/vehiculos/2
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
@@ -51,7 +51,7 @@ Content-Type: application/json
 ###
 
 ### 5. Cambiar estado
-PATCH {{base}}/vehiculos/1/estado
+PATCH {{base}}/vehiculos/2/estado
 Authorization: Bearer {{token}}
 Content-Type: application/json
 

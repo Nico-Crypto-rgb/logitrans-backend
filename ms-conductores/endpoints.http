@@ -15,7 +15,7 @@ Authorization: Bearer {{token}}
 ###
 
 ### 2. Obtener conductor por ID
-GET {{base}}/conductores/1
+GET {{base}}/conductores/2
 Authorization: Bearer {{token}}
 
 ###
@@ -36,7 +36,7 @@ Content-Type: application/json
 ###
 
 ### 4. Actualizar conductor
-PUT {{base}}/conductores/1
+PUT {{base}}/conductores/2
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
@@ -48,7 +48,7 @@ Content-Type: application/json
 ###
 
 ### 5. Cambiar estado
-PATCH {{base}}/conductores/1/estado
+PATCH {{base}}/conductores/2/estado
 Authorization: Bearer {{token}}
 Content-Type: application/json
 

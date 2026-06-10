@@ -1,23 +1,32 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
 class Usuario extends Model
 {
-    protected $table    = 'usuarios';
-    
+    protected $table = 'usuarios';
+
     protected $fillable = [
         'nombre',
-        'email', 
-        'password',
+        'correo',
+        'usuario',
+        'contrasena',
         'rol',
         'token',
-        'activo'
+        'sesion_activa',
+        'estado'
     ];
 
-    // Nunca devolver el password en las respuestas JSON
-    protected $hidden = ['password'];
+    protected $hidden = [
+        'contrasena',
+        'token'
+    ];
 
-    const ROLES = ['admin', 'logistica', 'operador'];
+    const ROLES = [
+        'administrador',
+        'logistica',
+        'operador'
+    ];
 }

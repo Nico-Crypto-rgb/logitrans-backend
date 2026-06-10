@@ -17,7 +17,7 @@ Authorization: Bearer {{token}}
 ###
 
 ### 2. Obtener ruta por ID
-GET {{base}}/rutas/1
+GET {{base}}/rutas/2
 Authorization: Bearer {{token}}
 
 ###
@@ -28,12 +28,12 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-    "nombre": "Bogotá - Medellín",
+    "nombre": "Bogotá - Tunja",
     "origen": "Bogotá",
-    "destino": "Medellín",
-    "distancia_km": 415,
-    "tiempo_estimado_horas": 8.5,
-    "activa": 1
+    "destino": "Tunja",
+    "distancia_km": 200,
+    "tiempo_estimado_horas": 4.0,
+    "activa": 2
 }
 
 ###
