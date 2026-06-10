@@ -28,22 +28,24 @@ class ProgramacionController
 
     public function store(Request $request, Response $response): Response
     {
-        // Cambiado a getParsedBody()
         $body = $request->getParsedBody();
         $body = is_array($body) ? $body : (array)$body;
 
-        if (empty($body['ruta_id']) || empty($body['conductor_id']) || empty($body['vehiculo_id']) || empty($body['fecha_salida'])) {
-            $response->getBody()->write(json_encode(['success' => false, 'message' => 'ruta_id, conductor_id, vehiculo_id y fecha_salida son requeridos']));
+        // Validaciones ajustadas a la estructura real de la tabla
+        if (empty($body['ruta_id']) || empty($body['conductor_id']) || empty($body['vehiculo_id']) || empty($body['fecha_salida']) || empty($body['hora_salida']) || empty($body['fecha_estimada_llegada'])) {
+            $response->getBody()->write(json_encode(['success' => false, 'message' => 'ruta_id, conductor_id, vehiculo_id, fecha_salida, hora_salida y fecha_estimada_llegada son requeridos']));
             return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
         }
 
         $prog = ProgramacionViaje::create([
-            'ruta_id'               => $body['ruta_id'],
-            'conductor_id'          => $body['conductor_id'],
-            'vehiculo_id'           => $body['vehiculo_id'],
-            'fecha_salida'          => $body['fecha_salida'],
-            'fecha_llegada_estimada'=> $body['fecha_llegada_estimada'] ?? null,
-            'estado'                => $body['estado'] ?? 'programado',
+            'ruta_id'                => $body['ruta_id'],
+            'conductor_id'           => $body['conductor_id'],
+            'vehiculo_id'            => $body['vehiculo_id'],
+            'fecha_salida'           => $body['fecha_salida'],
+            'hora_salida'            => $body['hora_salida'],
+            'fecha_estimada_llegada' => $body['fecha_estimada_llegada'],
+            'observaciones'          => $body['observaciones'] ?? null,
+            'estado'                 => $body['estado'] ?? 'programado',
         ]);
 
         $response->getBody()->write(json_encode(['success' => true, 'message' => 'Viaje programado', 'data' => $prog]));
@@ -58,17 +60,18 @@ class ProgramacionController
             return $response->withStatus(404)->withHeader('Content-Type', 'application/json');
         }
 
-        // Cambiado a getParsedBody()
         $body = $request->getParsedBody();
         $body = is_array($body) ? $body : (array)$body;
 
         $prog->update([
-            'ruta_id'               => $body['ruta_id']               ?? $prog->ruta_id,
-            'conductor_id'          => $body['conductor_id']          ?? $prog->conductor_id,
-            'vehiculo_id'           => $body['vehiculo_id']           ?? $prog->vehiculo_id,
-            'fecha_salida'          => $body['fecha_salida']          ?? $prog->fecha_salida,
-            'fecha_llegada_estimada'=> $body['fecha_llegada_estimada'] ?? $prog->fecha_llegada_estimada,
-            'estado'                => $body['estado']                ?? $prog->estado,
+            'ruta_id'                => $body['ruta_id']                ?? $prog->ruta_id,
+            'conductor_id'           => $body['conductor_id']           ?? $prog->conductor_id,
+            'vehiculo_id'            => $body['vehiculo_id']            ?? $prog->vehiculo_id,
+            'fecha_salida'           => $body['fecha_salida']           ?? $prog->fecha_salida,
+            'hora_salida'            => $body['hora_salida']            ?? $prog->hora_salida,
+            'fecha_estimada_llegada' => $body['fecha_estimada_llegada'] ?? $prog->fecha_estimada_llegada,
+            'observaciones'          => $body['observaciones']          ?? $prog->observaciones,
+            'estado'                 => $body['estado']                 ?? $prog->estado,
         ]);
 
         $response->getBody()->write(json_encode(['success' => true, 'message' => 'Programación actualizada', 'data' => $prog->fresh()]));

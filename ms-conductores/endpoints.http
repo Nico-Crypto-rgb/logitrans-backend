@@ -1,7 +1,7 @@
 ### ms-conductores — LogiTrans Express (puerto 8002)
 
 @base = http://localhost:8002
-@token = 42646305376fa2c6cf852c13b0095aaa72392410e6135e316ed81d17b5f20ed6
+@token = 7e9c92f1456aa329b7fe03827c0c2b14a9f6b1b77155045b5469fd8aedd3f0c8
 
 ### 0. Health check
 GET {{base}}/
@@ -20,34 +20,39 @@ Authorization: Bearer {{token}}
 
 ###
 
-### 3. Crear conductor
+### 3. Crear conductor (POST)
 POST {{base}}/conductores
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-    "nombre": "Nicolas Tamayo",
-    "cedula": "1011084879",
-    "licencia": "LIC-001",
+    "nombres": "Nicolas",
+    "apellidos": "Tamayo",
+    "documento": "1011084879",
     "telefono": "3213250592",
+    "correo": "nicolas@logitrans.com",
+    "numero_licencia": "LIC-001",
+    "categoria_licencia": "C2",
+    "fecha_vencimiento_licencia": "2027-12-31",
     "estado": "disponible"
 }
 
 ###
 
-### 4. Actualizar conductor
+### 4. Actualizar conductor (PUT)
 PUT {{base}}/conductores/2
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-    "nombre": "Carlos A. Ramírez",
+    "nombres": "Carlos Alberto",
+    "apellidos": "Ramírez",
     "telefono": "3009999999"
 }
 
 ###
 
-### 5. Cambiar estado
+### 5. Cambiar estado (PATCH)
 PATCH {{base}}/conductores/2/estado
 Authorization: Bearer {{token}}
 Content-Type: application/json
@@ -58,6 +63,6 @@ Content-Type: application/json
 
 ###
 
-### 6. Eliminar conductor
+### 6. Eliminar conductor (DELETE)
 DELETE {{base}}/conductores/1
 Authorization: Bearer {{token}}

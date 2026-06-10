@@ -11,7 +11,7 @@ class AuthMiddleware
 {
     public function __invoke(Request $request, RequestHandler $handler): Response
     {
-        // Allow OPTIONS through
+        // Permitir solicitudes OPTIONS (CORS preflight)
         if (strtoupper($request->getMethod()) === 'OPTIONS') {
             return $handler->handle($request);
         }
@@ -24,15 +24,16 @@ class AuthMiddleware
                 'success' => false,
                 'message' => 'Token no proporcionado'
             ]));
+            
             return $res->withHeader('Content-Type', 'application/json')
                        ->withHeader('Access-Control-Allow-Origin', '*')
                        ->withHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
-                       ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+                       ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
         }
 
-        // Accept both 'Bearer token' and raw token
-        if (str_starts_with($authHeader, 'Bearer ')) {
-            $token = trim(substr($authHeader, 7));
+        // Extracción robusta del token
+        if (preg_match('/Bearer\s+(.*)$/i', $authHeader, $matches)) {
+            $token = trim($matches[1]);
         } else {
             $token = trim($authHeader);
         }
@@ -43,9 +44,12 @@ class AuthMiddleware
         $ch = curl_init("$msAuthUrl/auth/validate");
         curl_setopt_array($ch, [
             CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_HTTPHEADER => ["Authorization: $token"],
+            CURLOPT_HTTPHEADER => [
+                "Authorization: Bearer $token" // Se agregó el prefijo 'Bearer ' que faltaba
+            ],
             CURLOPT_TIMEOUT => 5,
         ]);
+        
         $resultado  = curl_exec($ch);
         $httpCode   = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
@@ -53,16 +57,17 @@ class AuthMiddleware
         if ($httpCode !== 200) {
             $res = new NyholmResponse(401);
             $res->getBody()->write(json_encode([
-            'success' => false,
-            'message' => 'Token inválido o expirado'
+                'success' => false,
+                'message' => 'Token inválido o expirado'
             ]));
+            
             return $res->withHeader('Content-Type', 'application/json')
                        ->withHeader('Access-Control-Allow-Origin', '*')
                        ->withHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
-                       ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+                       ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
         }
 
-        // Adjunta los datos del usuario al request para usarlos en el controlador
+        // Adjunta los datos del usuario al request
         $userData = json_decode($resultado, true);
         $request = $request->withAttribute('usuario', $userData['user'] ?? []);
 

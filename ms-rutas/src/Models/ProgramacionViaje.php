@@ -6,14 +6,18 @@ use Illuminate\Database\Eloquent\Model;
 
 class ProgramacionViaje extends Model
 {
-    protected $table = 'programacion_viajes';
+    // Nombre de la tabla correcto (plural)
+    protected $table = 'programaciones_viajes';
 
+    // Lista de campos permitidos para asignación masiva
     protected $fillable = [
         'ruta_id',
         'conductor_id',
         'vehiculo_id',
         'fecha_salida',
-        'fecha_llegada_estimada',
+        'hora_salida',
+        'fecha_estimada_llegada',
+        'observaciones',
         'estado',
     ];
 }

@@ -33,67 +33,84 @@ class ConductorController
     }
 
     // POST /conductores
-public function store(Request $request, Response $response): Response
-{
-    // Al tener $app->addBodyParsingMiddleware() en index.php,
-    // Slim ya procesó el JSON. Obtenemos los datos con getParsedBody()
-    $body = $request->getParsedBody();
+    public function store(Request $request, Response $response): Response
+    {
+        $body = $request->getParsedBody();
+        $body = is_array($body) ? $body : (array)$body;
 
-    // Aseguramos que sea un array por si getParsedBody devuelve un objeto stdClass
-    $body = is_array($body) ? $body : (array)$body;
+        // Validación de campos requeridos (según tu nuevo diseño de tabla)
+        if (
+            empty($body['nombres']) || 
+            empty($body['apellidos']) || 
+            empty($body['documento']) || 
+            empty($body['telefono']) ||
+            empty($body['correo']) ||
+            empty($body['numero_licencia']) ||
+            empty($body['categoria_licencia']) ||
+            empty($body['fecha_vencimiento_licencia'])
+        ) {
+            $response->getBody()->write(json_encode([
+                'success' => false, 
+                'message' => 'Todos los campos son requeridos: nombres, apellidos, documento, telefono, correo, numero_licencia, categoria_licencia, fecha_vencimiento_licencia'
+            ]));
+            return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
+        }
 
-    $usuario = $request->getAttribute('usuario');
+        // Verificación de existencia (usando el campo nuevo 'documento')
+        if (Conductor::where('documento', $body['documento'])->exists()) {
+            $response->getBody()->write(json_encode(['success' => false, 'message' => 'Ya existe un conductor con ese número de documento']));
+            return $response->withStatus(409)->withHeader('Content-Type', 'application/json');
+        }
 
-    // Validación de campos requeridos
-    if (empty($body['nombre']) || empty($body['cedula']) || empty($body['licencia'])) {
-        $response->getBody()->write(json_encode(['success' => false, 'message' => 'nombre, cedula y licencia son requeridos']));
-        return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
+        // Creación del registro
+        $conductor = Conductor::create([
+            'nombres'                    => $body['nombres'],
+            'apellidos'                  => $body['apellidos'],
+            'documento'                  => $body['documento'],
+            'telefono'                   => $body['telefono'],
+            'correo'                     => $body['correo'],
+            'numero_licencia'            => $body['numero_licencia'],
+            'categoria_licencia'         => $body['categoria_licencia'],
+            'fecha_vencimiento_licencia' => $body['fecha_vencimiento_licencia'],
+            'estado'                     => $body['estado'] ?? 'disponible',
+        ]);
+
+        $response->getBody()->write(json_encode(['success' => true, 'message' => 'Conductor creado', 'data' => $conductor]));
+        return $response->withStatus(201)->withHeader('Content-Type', 'application/json');
     }
-
-    // Verificación de existencia
-    if (Conductor::where('cedula', $body['cedula'])->exists()) {
-        $response->getBody()->write(json_encode(['success' => false, 'message' => 'Ya existe un conductor con esa cédula']));
-        return $response->withStatus(409)->withHeader('Content-Type', 'application/json');
-    }
-
-    // Creación del registro
-    $conductor = Conductor::create([
-        'nombre'     => $body['nombre'],
-        'cedula'     => $body['cedula'],
-        'licencia'   => $body['licencia'],
-        'telefono'   => $body['telefono'] ?? null,
-        'estado'     => $body['estado'] ?? 'disponible',
-        'usuario_id' => $usuario['id'] ?? 1,
-    ]);
-
-    $response->getBody()->write(json_encode(['success' => true, 'message' => 'Conductor creado', 'data' => $conductor]));
-    return $response->withStatus(201)->withHeader('Content-Type', 'application/json');
-}
 
     // PUT /conductores/{id}
-   public function update(Request $request, Response $response, array $args): Response
-{
-    $conductor = Conductor::find($args['id']);
-    if (!$conductor) {
-        $response->getBody()->write(json_encode(['success' => false, 'message' => 'Conductor no encontrado']));
-        return $response->withStatus(404)->withHeader('Content-Type', 'application/json');
+    public function update(Request $request, Response $response, array $args): Response
+    {
+        $conductor = Conductor::find($args['id']);
+        if (!$conductor) {
+            $response->getBody()->write(json_encode(['success' => false, 'message' => 'Conductor no encontrado']));
+            return $response->withStatus(404)->withHeader('Content-Type', 'application/json');
+        }
+
+        $body = $request->getParsedBody();
+        $body = is_array($body) ? $body : (array)$body;
+
+        $conductor->update([
+            'nombres'                    => $body['nombres'] ?? $conductor->nombres,
+            'apellidos'                  => $body['apellidos'] ?? $conductor->apellidos,
+            'documento'                  => $body['documento'] ?? $conductor->documento,
+            'telefono'                   => $body['telefono'] ?? $conductor->telefono,
+            'correo'                     => $body['correo'] ?? $conductor->correo,
+            'numero_licencia'            => $body['numero_licencia'] ?? $conductor->numero_licencia,
+            'categoria_licencia'         => $body['categoria_licencia'] ?? $conductor->categoria_licencia,
+            'fecha_vencimiento_licencia' => $body['fecha_vencimiento_licencia'] ?? $conductor->fecha_vencimiento_licencia,
+            'estado'                     => $body['estado'] ?? $conductor->estado,
+        ]);
+
+        $response->getBody()->write(json_encode([
+            'success' => true, 
+            'message' => 'Conductor actualizado', 
+            'data' => $conductor->fresh()
+        ]));
+        return $response->withHeader('Content-Type', 'application/json');
     }
 
-    // Usamos getParsedBody() gracias al middleware configurado en index.php
-    $body = $request->getParsedBody();
-    $body = is_array($body) ? $body : (array)$body;
-
-    $conductor->update([
-        'nombre'   => $body['nombre']   ?? $conductor->nombre,
-        'cedula'   => $body['cedula']   ?? $conductor->cedula,
-        'licencia' => $body['licencia'] ?? $conductor->licencia,
-        'telefono' => $body['telefono'] ?? $conductor->telefono,
-        'estado'   => $body['estado']   ?? $conductor->estado,
-    ]);
-
-    $response->getBody()->write(json_encode(['success' => true, 'message' => 'Conductor actualizado', 'data' => $conductor->fresh()]));
-    return $response->withHeader('Content-Type', 'application/json');
-}
     // DELETE /conductores/{id}
     public function destroy(Request $request, Response $response, array $args): Response
     {
@@ -109,33 +126,32 @@ public function store(Request $request, Response $response): Response
     }
 
     // PATCH /conductores/{id}/estado
-public function cambiarEstado(Request $request, Response $response, array $args): Response
-{
-    $conductor = Conductor::find($args['id']);
-    if (!$conductor) {
-        $response->getBody()->write(json_encode(['success' => false, 'message' => 'Conductor no encontrado']));
-        return $response->withStatus(404)->withHeader('Content-Type', 'application/json');
+    public function cambiarEstado(Request $request, Response $response, array $args): Response
+    {
+        $conductor = Conductor::find($args['id']);
+        if (!$conductor) {
+            $response->getBody()->write(json_encode(['success' => false, 'message' => 'Conductor no encontrado']));
+            return $response->withStatus(404)->withHeader('Content-Type', 'application/json');
+        }
+
+        $body = $request->getParsedBody();
+        $body = is_array($body) ? $body : (array)$body;
+
+        $validos = ['disponible', 'en_ruta', 'inactivo'];
+
+        if (empty($body['estado']) || !in_array($body['estado'], $validos)) {
+            $response->getBody()->write(json_encode(['success' => false, 'message' => 'Estado inválido. Use: disponible, en_ruta, inactivo']));
+            return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
+        }
+
+        $conductor->update(['estado' => $body['estado']]);
+        
+        $response->getBody()->write(json_encode([
+            'success' => true, 
+            'message' => "Estado cambiado a {$body['estado']}", 
+            'data' => $conductor->fresh()
+        ]));
+        
+        return $response->withHeader('Content-Type', 'application/json');
     }
-
-    // Usamos getParsedBody() para obtener los datos procesados
-    $body = $request->getParsedBody();
-    $body = is_array($body) ? $body : (array)$body;
-
-    $validos = ['disponible', 'en_ruta', 'inactivo'];
-
-    if (empty($body['estado']) || !in_array($body['estado'], $validos)) {
-        $response->getBody()->write(json_encode(['success' => false, 'message' => 'Estado inválido. Use: disponible, en_ruta, inactivo']));
-        return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
-    }
-
-    $conductor->update(['estado' => $body['estado']]);
-    
-    $response->getBody()->write(json_encode([
-        'success' => true, 
-        'message' => "Estado cambiado a {$body['estado']}", 
-        'data' => $conductor->fresh()
-    ]));
-    
-    return $response->withHeader('Content-Type', 'application/json');
-}
 }

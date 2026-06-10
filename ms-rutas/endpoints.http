@@ -28,12 +28,11 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-    "nombre": "Bogotá - Tunja",
-    "origen": "Bogotá",
-    "destino": "Tunja",
-    "distancia_km": 200,
-    "tiempo_estimado_horas": 4.0,
-    "activa": 2
+    "ciudad_origen": "Bogotá",
+    "ciudad_destino": "Tunja",
+    "distancia": 200.00,
+    "tiempo_estimado": "4 horas",
+    "observaciones": "Ruta de prueba"
 }
 
 ###
@@ -44,8 +43,8 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-    "distancia_km": 420,
-    "tiempo_estimado_horas": 9
+    "distancia": 420.50,
+    "tiempo_estimado": "8 horas"
 }
 
 ###
@@ -73,8 +72,10 @@ Content-Type: application/json
     "ruta_id": 1,
     "conductor_id": 1,
     "vehiculo_id": 1,
-    "fecha_salida": "2026-06-10 06:00:00",
-    "fecha_llegada_estimada": "2026-06-10 14:30:00",
+    "fecha_salida": "2026-06-15",
+    "hora_salida": "06:00:00",
+    "fecha_estimada_llegada": "2026-06-15",
+    "observaciones": "Carga de alimentos",
     "estado": "programado"
 }
 
@@ -86,7 +87,7 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-    "estado": "en_curso"
+    "estado": "en_transito"
 }
 
 ###
